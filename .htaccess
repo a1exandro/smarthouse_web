@@ -1,0 +1,4 @@
+AuthUserFile /var/www/vhosts/tbestway.com/httpdoc_dev/d/.htpasswd
+AuthName "Admin login"
+AuthType Basic
+Require Valid-User
