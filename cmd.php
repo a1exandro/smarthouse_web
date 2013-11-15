@@ -2,8 +2,8 @@
 	require('config.php');
 	set_time_limit(SCRIPT_TIME_LIMIT);
 
-	getMessage();
-	sendCommands();
+	$recv_cmd = getMessage();
+	sendCommands( $recv_cmd=='ping' );
 
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -12,7 +12,9 @@
 	{    	$cmd = $_POST['cmd'];
     	$msg = mysql_escape_string($_POST['msg']);
     	switch ($cmd)
-    	{    		case 'ping':
+    	{
+		case 'register':
+		break;    		case 'ping':
     		break;
     		case 'message':
     		{
@@ -21,13 +23,14 @@
     		}
     		break;
     	}
+	return $cmd;
 	}
 
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 
-	function sendCommands()
-	{		$timeout = WAIT_CMD_TIMEOUT;
+	function sendCommands($sleep)
+	{		$timeout = $sleep?WAIT_CMD_TIMEOUT:0;
 		do
 		{
 			$sent = false;

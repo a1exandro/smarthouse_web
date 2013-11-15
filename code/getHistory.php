@@ -11,6 +11,8 @@
 		{
 			$msgs[] = $msg;
 		}
+		$cmds = array_reverse($cmds);
+		$msgs = array_reverse($msgs);
 		return implode("<br>",$cmds);
 	}
 ?>
