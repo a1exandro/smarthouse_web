@@ -9,21 +9,28 @@
 /////////////////////////////////////////////////////////
 
 	function getMessage()
-	{    	$cmd = $_POST['cmd'];
+	{    	$cmd = $_REQUEST['cmd'];
     	$msg = mysql_escape_string($_POST['msg']);
+    	$board_id = (int)$_POST['board_id'];
     	switch ($cmd)
     	{
-		case 'register':
-		break;    		case 'ping':
+			case 'register':
+			{
+				$BOARD_REQ = 1;				require("engine/engine.php");
+				modules::onBoardRegister();
+			}
+			break;    		case 'ping':
     		break;
     		case 'message':
     		{
     			$time = time();
-    			$q = mysql_query("INSERT INTO `messages` (message,time) VALUES ('$msg',$time);");
+    			$q = mysql_query("INSERT INTO `messages` (message,add_time) VALUES ('$msg',$time);");
     		}
     		break;
     	}
-	return $cmd;
+    	$time = time();
+    	$q = mysql_query("UPDATE boards SET alive = $time WHERE id = $board_id");
+		return $cmd;
 	}
 
 /////////////////////////////////////////////////////////
