@@ -1,4 +1,4 @@
-function addSwitch(name,port,id)
+function addSwitch(id,name,port)
 {
 	var templ = 'sw_block_';	if (!name) name = '';
 	if (!port) port = '';

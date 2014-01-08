@@ -1,8 +1,6 @@
 <?php
 	$board_id = 1;
 	require('config.php');
-    require('code/getHistory.php');
-    require('code/getInfo.php');
 	require('engine/engine.php');
 ?>
 <html>
@@ -20,7 +18,7 @@
 			</tr>
 			<tr>
 				<td colspan='2'>
-			     	<?=getInfo();?>
+			     	<? modules::load('info'); ?>
 				</td>
 			</tr>
 			<tr>
@@ -28,7 +26,7 @@
 			     	Переключатели
 				</td>
 				<td class='capt'>
-			     	Датчики
+			     	Датчики 
 				</td>
 			</tr>
 			<tr>
@@ -36,7 +34,7 @@
 		      		<? modules::load('switches'); ?>
 		      	</td>
 		      	<td>
-		      		51°
+		      		<? modules::load('sensors'); ?>
 		  		</td>
         	</tr>
         	<tr>
@@ -49,16 +47,10 @@
 			</tr>
         	<tr>
         		<td>
-		      		<div id='logblock'>
-		      			<div id='history'>
-		      				<?getHistory();?>
-		    			</div>
-		      		   	<div id='log_bottom'><a href="javascript:updateHistory();">обновить</a></div>
-		      		</div>
-		      		<input name="cmd" class="cmd" id="cmd" type="text" value=""><input type="button" value="Отправить" onClick="sendCmd();">
+					<? modules::load('commands'); ?>
 		      	</td>
 		      	<td>
-		      		came 1
+		      		<? modules::load('camera'); ?>
 		  		</td>
         	</tr>
 		</table>

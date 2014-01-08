@@ -3,7 +3,7 @@
 	require_once('modules.php');
     session_start();
     if ($BOARD_REQ)
-    	$_SESSION['board_id'] = (int)$_POST['board_id'];
+    	$_SESSION['board_id'] = (int)$_REQUEST['board_id'];
     else
     	$_SESSION['board_id'] = 1;
     class engine

@@ -1,37 +1,51 @@
+var modules = []
+
 $(document).ready(function() {
 	document.getElementById('log_bottom').scrollIntoView();
 });
 
-function sendCmd()
-{	var cmd = $("#cmd").val();
-	httpParams = "cmd="+cmd;
-	$.ajax(
- 		{
- 			type:	"POST",
- 			url:	"code/sendCommand.php",
- 			data:	httpParams,
- 			success: function(response)
- 					 {
-    						$("#cmd").val('');
-    						updateHistory();
-    						setTimeout(updateHistory, 3000)
- 					 }
- 		});
-}
-function updateHistory()
+
+function onModuleEditMode(m_name)
 {
-	httpParams = "";
-	$.ajax(
- 		{
- 			type:	"POST",
- 			url:	"code/getHistory.php",
- 			data:	httpParams,
- 			success: function(response)
- 					 {
-    						$("#history").html(response);
-    						document.getElementById('log_bottom').scrollIntoView();
- 					 }
- 		});
+	for (i=0; i<modules.length; i++)
+	{
+		if (modules[i].m_name == m_name)
+		{
+			if (modules[i].timerId != 0)
+			{
+				clearInterval(modules[i].timerId);
+			}
+		}
+	}
+}
+
+function onModuleUpdate(m_name,updateInterval)
+{
+	for (i=0; i<modules.length; i++)
+	{
+		if (modules[i].m_name == m_name)
+		{
+			if (modules[i].timerId != 0)
+			{
+				clearInterval(modules[i].timerId);
+				if (updateInterval > 0)
+					modules[i].timerId = setInterval(refreshModule,updateInterval*1000,m_name);
+			}
+		}
+	}
+}
+
+
+function onModuleLoad(m_name,updateInterval)
+{
+	var timerId = 0;
+	if (updateInterval > 0)
+		timerId = setInterval(refreshModule,updateInterval*1000,m_name);
+	var m =  {
+		m_name:m_name,
+		timerId: timerId
+	}
+	modules.push(m);
 }
 
 function switchModuleToEditMode(m_name)
@@ -84,6 +98,6 @@ function getFreeId(templ)
 
 function delBlock(id)
 {
-	if (confirm('Вы действительно хотите удалить выбранное поле?'))
+	if (confirm('Р’С‹ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»Рµ?'))
 		$("#"+id).remove();
 }
