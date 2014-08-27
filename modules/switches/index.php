@@ -1,4 +1,6 @@
 <?php
+define('VAL_ON',0);
+define('VAL_OFF',1);
 	class switches
 	{
 		public static function module_onStatus($recv_stat,$statSender,$m_name,$g_stat,$cfg,$board_id)
@@ -10,32 +12,32 @@
 			$res->stat = $g_stat;
 			return $res;
 		}
-		
+
 		public static function module_getContent($cfg,$stat,$m_name)
-		{ 
+		{
 			$stat->data = (array)$stat->data;
-						foreach ($cfg->switches as $switch)
-			{ 
+			foreach ($cfg->switches as $switch)
+			{
 				if ($stat->data['p'.$switch->port]->port_val == $switch->val)
-					$d_class='val_matches';
+					$d_class='val_ok';
 				else
-					$d_class='val_notmatches';
-			
+					$d_class='val_err';
+
 			?>
 				<div class='<?=$d_class;?>'>
 					<?=$switch->name;?>
-					<input name='p<?=$switch->port;?>' type='checkbox' value='ON' onClick="javascript:onModuleAction('<?=$m_name;?>','p<?=$switch->port;?>');" <?if ($switch->val == 1) echo 'checked';?>><br>
+					<input name='p<?=$switch->port;?>' type='checkbox' value='ON' onClick="javascript:onModuleAction('<?=$m_name;?>','p<?=$switch->port;?>');" <?if ($switch->val == VAL_ON) echo 'checked';?>><br>
 				</div>
 			<? }
 		}
-		
+
 		public static function module_onAction($cfg,$m_name)
 	  	{
 	  		$p = $_POST['p'];
 			if ($_POST[$p])
-				$val = 1;
+				$val = VAL_ON;
 			else
-				$val = 0;
+				$val = VAL_OFF;
 
 			foreach ($cfg->switches as $sw)
 			{
@@ -47,14 +49,14 @@
 			$res->cmd ="gpio set $p = $val";
 	  		return $res;
 	  	}
-		
+
 		public static function module_onCommand($cmd,$msg,$stat,$cfg,$m_name)
 	  	{
 			switch($cmd)
 			{
-				case 'register': 
+				case 'register':
 					return $m_name::module_onBoardRegister($msg,$stat,$cfg,$m_name);
-				break;			
+				break;
 			}
 		}
 	  	public static function module_onBoardRegister($msg,$stat,$cfg,$m_name)
@@ -97,11 +99,16 @@
 				$sw = new stdClass;
 				$sw->name = $name;
 				$sw->port = $port;
-				
+
 				if ($name && $port)
 					$cfg->switches[] = $sw;
 			}
 			return $cfg;
+		}
+
+		public static function module_onCron($cron_time,$stat,$cfg,$m_name)
+		{
+
 		}
 	}
 ?>

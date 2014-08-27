@@ -140,6 +140,11 @@
 			while ( ($msg = $msgs[$mNum++]))
 				commands::printMsg($msg);
 		}
+		
+		public static function module_onCron($cron_time,$stat,$cfg,$m_name)
+		{
+			
+		}
 
     }
 	

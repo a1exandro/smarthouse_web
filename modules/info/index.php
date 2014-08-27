@@ -16,7 +16,8 @@
 			else
 				echo "<font color=green>Последняя активность: ".date("H:i:s - d.m.Y",$stat->alive)." ({$diff}с назад)</font>";
 			echo "<br>Версия ПО: {$stat->version}<br>";
-			echo "Время загрузки: ".date("H:i:s - d.m.Y",$stat->reg);
+			echo "Время загрузки: ".date("H:i:s - d.m.Y",$stat->reg)."<br>";
+			echo "IP: ".$stat->last_ip."<br>";
 		}
 
 		public static function module_onAction($cfg,$m_name)
@@ -40,6 +41,7 @@
 		public static function module_onBoardActivity($msg,$stat,$cfg,$m_name)
 		{
 			$stat->alive= time();
+			$stat->last_ip = $_SERVER['REMOTE_ADDR'];
 			$res->stat = $stat;
 			return $res;
 		}
@@ -61,6 +63,11 @@
 		{
 			
 			return $cfg;
+		}
+		
+		public static function module_onCron($cron_time,$stat,$cfg,$m_name)
+		{
+
 		}
 
     }

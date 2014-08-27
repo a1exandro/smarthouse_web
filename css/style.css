@@ -13,12 +13,12 @@
 #log_bottom
 {	text-align:right;
 }
-.val_matches
+.val_ok
 {
 	color:green;
 }
 
-.val_notmatches
+.val_err
 {
 	color:red;
 }

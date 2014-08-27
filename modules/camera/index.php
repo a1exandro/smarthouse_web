@@ -112,5 +112,10 @@
 			}
 			return $cfg;
 		}
+		
+		public static function module_onCron($cron_time,$stat,$cfg,$m_name)
+		{
+			
+		}
     }
 ?>

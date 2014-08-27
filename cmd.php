@@ -12,9 +12,14 @@
 /////////////////////////////////////////////////////////
 
 	function getMessage()
-	{    	$cmd = $_REQUEST['cmd'];
+	{
+		$cmd = $_REQUEST['cmd'];
     	$msg = $_REQUEST['msg'];
     	$board_id = (int)$_REQUEST['board_id'];
+	//////// 	    //	$cmd = "message";//$_REQUEST['cmd'];
+    //	$msg = 'SENSORS: [{"data": 11.11, "type": "T", "addr": "28-0000045f3ba4"}, {"data": 0, "type": "D", "addr": "22"}] ';//$_REQUEST['msg'];
+    //	$board_id = 1;//(int)$_REQUEST['board_id'];
+	////////
     	switch ($cmd)
     	{
 			case 'register':    		case 'ping':
@@ -24,13 +29,11 @@
     		{
     			$time = time();
 				$msg = mysql_escape_string($msg);
-    			$q = mysql_query("INSERT INTO `messages` (message,add_time) VALUES ('$msg',$time);");
+    			$q = mysql_query("INSERT INTO `messages` (board_id,message,add_time) VALUES ($board_id, '$msg',$time);");
 				modules::onMsg($msg);
     		}
     		break;
     	}
-    	/*$time = time();
-    	$q = mysql_query("UPDATE boards SET alive = $time WHERE id = $board_id");*/
 		return $cmd;
 	}
 

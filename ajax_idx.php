@@ -1,5 +1,4 @@
 <?php
-	$board_id = 1;
 	require('config.php');
 
 	require('engine/engine.php');
