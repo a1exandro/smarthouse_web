@@ -1,8 +1,8 @@
 <?php
 	$dblocation="localhost";
-	$dbuser="";
-	$dbpassw="";
-	$dbname="";
+	$dbuser="smhz";
+	$dbpassw="LuhdA8FNz";
+	$dbname="db_smhz";
 
 	$dbcnx=@mysql_connect($dblocation, $dbuser, $dbpassw);
     mysql_select_db($dbname);

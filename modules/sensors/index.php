@@ -6,9 +6,8 @@
 			if ($statSender != 'SENSORS') return NULL;
 			$g_stat->data = (array)$g_stat->data;
 			$cmd = '';
-			$sensor_addr = 0;
 			$sensor_addr = '';
-			
+
 			switch ($recv_stat->type)
 			{
 				case 'list':
@@ -19,28 +18,35 @@
 							$obj = new stdClass;
 							$obj->name = "Датчик #$sens";
 							$obj->addr = $sens;
-							$obj->type = $recv_stat->type;
+							$obj->type = 'T';
 							array_push($cfg->sensors,$obj);
-							$cmd .= "sensors get {$recv_stat->type}$sens;";
-							$sensor_addr = $obj->addr; 
+							$cmd .= "sensors get T$sens;";
+							$sensor_addr = $obj->addr;
 							$sensor_type = $obj->type;
 						}
 					}
 				break;
+                case 'cfg':
+					$updateInterval = $cfg->updateInterval;
+                    $cfg = json_decode($recv_stat->data);
+					$cfg->updateInterval = $updateInterval;
+                    foreach ($cfg->sensors as $sensor)
+                        $cmd .= "sensors get {$sensor->type}{$sensor->addr};";
+                break;
 				default:
 					$g_stat->data[ $recv_stat->type.$recv_stat->addr ]->{$recv_stat->type} = $recv_stat->data;
-					$sensor_addr = $recv_stat->addr; 
-					$sensor_type = $recv_stat->type; 
+					$sensor_addr = $recv_stat->addr;
+					$sensor_type = $recv_stat->type;
 				break;
 			}
-			
+
 			$res->stat = self::module_checkSensor($cfg, $g_stat, $sensor_addr, $sensor_type);
-			
+
 			$res->cfg = $cfg;
 			$res->cmd = $cmd;
 			return $res;
 		}
-		
+
 		public static function module_checkSensor($cfg, $stat, $addr, $type)
 		{
 			foreach ($cfg->sensors as $sensor)
@@ -66,10 +72,10 @@
 							$sensorName = (mb_substr($sensor->name,0,25));											// max 25 symbols
 							sendAlarm("SmartHouse:\nКритическое значение: '{$sensorName}' - {$sensor->data}");	// len 39 symbols + val(max 6) = 45 symbols
 						}
-						
+
 						$stat->data[$sensor->type.$sensor->addr]->warn = $rangeErr;
 					}
-					
+
 					break;
 				}
 			}
@@ -78,7 +84,8 @@
 		public static function module_getContent($cfg,$stat,$m_name)
 		{
 			$stat->data = (array)$stat->data;
-			echo "<table>";			foreach ($cfg->sensors as $sensor)
+			echo "<table>";
+			foreach ($cfg->sensors as $sensor)
 			{
 				$sensor->data = 0;
 				echo "<tr>";
@@ -92,28 +99,31 @@
 
 				}
 				$rangeErr = self::module_checkRange($sensor);
-				
+
 				if (!$rangeErr)
 					$d_class='val_ok';
 				else
 				{
 					$d_class='val_err';
 				}
-					
+
 				echo "<td class='$d_class'>";
 				echo "$sensor->name  - ";
 
-			
+
 				switch ($sensor->type)
-				{					case "T":
+				{
+					case "T":
 					{
 						echo "{$sensor->data}°";
 					} break;
 					case "H":
-					{						echo "{$sensor->data}%";
+					{
+						echo "{$sensor->data}%";
 					} break;
 					default:
-					{						echo "{$sensor->data}";
+					{
+						echo "{$sensor->data}";
 					}; break;
 				}
 				echo "</td>";
@@ -137,13 +147,13 @@
 					return ($sensor->data > $sensor->err_val);
 				break;
 				default:
-					
+
 				break;
 			}
-			
+
 			return true;
 		}
-		
+
 		public static function module_onAction($cfg,$m_name)
 	  	{
 	  		$p = $_POST['p'];
@@ -169,12 +179,8 @@
 
 	  	public static function module_onBoardRegister($msg,$stat,$cfg,$m_name)
 	  	{
-			$cmd = 'sensors get list;';
-	    		foreach ($cfg->sensors as $sens)
-			{
-				$cmd .= "sensors get {$sens->type}{$sens->addr};";
-				$cmd .= "sensors track {$sens->type}{$sens->addr};";
-			}
+			$cmd = 'sensors get cfg;';
+
 	        $res->cmd = $cmd;
 	    	return $res;
 	  	}
@@ -198,12 +204,13 @@
 
 		public static function module_save($cfg,$m_name)
 		{
+
 			$names = $_POST['name'];
 			$addrs = $_POST['addr'];
 			$types = $_POST['type'];
 			$err_signs = $_POST['err_sign'];
 			$err_vals = $_POST['err_val'];
-			
+
 			$i = 0;
 			$cfg->sensors = array();
 			foreach ($names as $name)

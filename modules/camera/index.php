@@ -8,10 +8,20 @@
 			$cmd = '';
 			switch ($recv_stat->type)
 			{
+                case 'cfg':
+                    $updateInterval = $cfg->updateInterval;
+                    $cfg = json_decode($recv_stat->data);
+					$cfg->updateInterval = $updateInterval;
+                    foreach ($cfg->camera as $came)
+                    {
+                        $cmd .= "camera get c{$came->addr};";
+                    }
+                    break;
 				case 'picture':
 				{
-					foreach ($_FILES as $name => $file)
+					foreach ($_FILES as  $file)
 					{	
+						$name = $file['name'];
 						$dir_name = "modules/{$m_name}/img/{$board_id}";
 						if (!file_exists($dir_name))
 							mkdir($dir_name);
@@ -32,7 +42,7 @@
 		public static function module_getContent($cfg,$stat,$m_name)
 		{
 			$stat->data = (array)$stat->data;
-			foreach ($cfg->cames as $came) 
+			foreach ($cfg->camera as $came) 
 			{
 				$iUrl = $stat->data['c'.$came->addr]->picture;
 			?>
@@ -66,10 +76,7 @@
 		
 	  	public static function module_onBoardRegister($msg,$stat,$cfg,$m_name)
 	  	{
-	    	foreach ($cfg->cames as $came)
-			{
-				$cmd .= "came get c{$came->addr};"; 
-			}
+	    	$cmd = "camera get cfg;";
 	        $res->cmd = $cmd;
 	    	return $res;
 	  	}
@@ -79,7 +86,7 @@
 			$i = 0;
 			echo "<div id = 'came_blocks'>";
 				echo "<script>";
-					foreach ($cfg->cames as $came)
+					foreach ($cfg->camera as $came)
 					{
 					?>
 	            		addCame(<?=$i;?>,'<?=$came->name;?>','<?=$came->addr;?>');
@@ -97,7 +104,7 @@
 			$addrs = $_POST['addr'];
 			
 			$i = 0;
-			$cfg->cames = array();
+			$cfg->camera = array();
 			foreach ($names as $name)
 			{
 				$addr = $addrs[$i];
@@ -107,7 +114,7 @@
 				$came->addr = $addr;
 				
 				if ($name)
-					$cfg->cames[] = $came;
+					$cfg->camera[] = $came;
 				$i++;
 			}
 			return $cfg;

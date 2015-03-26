@@ -1,7 +1,6 @@
 function addCame(id,name,addr)
 {
 	var templ = 'came_block_';
-	var noTypeField = true;
 	if (!name) name = ''; 
 	if (!addr) addr = '';
 	if (!id) id = getFreeId(templ);

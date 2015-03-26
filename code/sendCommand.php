@@ -1,6 +1,6 @@
 <?php
 	require('../config.php');
-	$cmd = mysql_escape_string($_POST['cmd']);
+	$cmd = mysql_real_escape_string($_POST['cmd']);
 	if (strlen($cmd) == 0) die();
 
 	if (mb_substr($cmd,-1) != ';') $cmd .= ';';

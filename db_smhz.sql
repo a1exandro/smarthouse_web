@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.2
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Хост: localhost
--- Время создания: Авг 27 2014 г., 20:31
--- Версия сервера: 5.1.73
--- Версия PHP: 5.3.3
+-- Host: localhost
+-- Generation Time: Mar 26, 2015 at 02:55 PM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,29 +17,28 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `db_smhz`
+-- Database: `db_smhz`
 --
-CREATE DATABASE IF NOT EXISTS `db_smhz` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `db_smhz`;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `boards`
+-- Table structure for table `boards`
 --
 
 CREATE TABLE IF NOT EXISTS `boards` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `config` text,
   `stat` text,
   `descr` text,
+  `email` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `commands`
+-- Table structure for table `commands`
 --
 
 CREATE TABLE IF NOT EXISTS `commands` (
@@ -49,12 +48,12 @@ CREATE TABLE IF NOT EXISTS `commands` (
   `add_time` int(11) NOT NULL DEFAULT '0',
   `get_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1336 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3886 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `messages`
+-- Table structure for table `messages`
 --
 
 CREATE TABLE IF NOT EXISTS `messages` (
@@ -63,7 +62,24 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `message` text NOT NULL,
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6363 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16273 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` tinytext NOT NULL,
+  `login` tinytext NOT NULL,
+  `pw` tinytext NOT NULL,
+  `salt` tinytext NOT NULL,
+  `email` tinytext NOT NULL,
+  `boards` tinytext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

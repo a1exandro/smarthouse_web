@@ -2,11 +2,13 @@
 	require('config.php');
 	require('engine/engine.php');
 ?>
+<!-----DOCTYPE html--->
 <html>
 	<head>
     	<link rel="stylesheet" href="css/style.css" type="text/css" />
-    	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    	<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
     	<script type="text/javascript" src="js/script.js"></script>
+    	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	</head>
 	<body>
 		<table border='1' width='100%'>
@@ -25,7 +27,7 @@
 			     	Переключатели
 				</td>
 				<td class='capt'>
-			     	Датчики 
+			     	Датчики
 				</td>
 			</tr>
 			<tr>

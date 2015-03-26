@@ -18,7 +18,6 @@
 
 			$j_conf = addslashes(json_encode($g_cfg));
 			$q = mysql_query("UPDATE boards SET config = '$j_conf' WHERE id = $board_id");
-			echo mysql_error();
 		}
 
 		public static function getStat($m_name)
@@ -79,12 +78,15 @@
 			require ("modules/$m_name/index.php");
 			$cfg = modules::getCfg($m_name);
 			$cfg = $m_name::module_save($cfg,$m_name);
+            unset($cfg->updateInterval);
+            engine::execCommand("$m_name set cfg ".json_encode($cfg).";");  // send config
 		////////////////////////////////////////////////////
 			$updateInterval = (int)$_POST['updateInterval'];
 			$cfg->updateInterval = $updateInterval;
 		////////////////////////////////////////////////////
 			modules::updateCfg($cfg,$m_name);
 			modules::getContent($m_name);
+
 			echo "<script>onModuleUpdate('$m_name',{$cfg->updateInterval});</script>";
 		}
 
@@ -145,7 +147,8 @@
 			$excl_list = array('..','.');
 			$board_id = (int)$_SESSION['board_id'];
 			$m_dir = "modules";
-			if ($dh = opendir($m_dir))
+
+			if ($dh = opendir($m_dir))
 			{
 				while ($m_name = readdir($dh))
 				{
